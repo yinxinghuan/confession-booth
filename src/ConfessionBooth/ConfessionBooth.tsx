@@ -12,7 +12,7 @@ import { useWall } from './hooks/useWall';
 import { useGameSave } from '@shared/save';
 import type { Confession, Phase } from './types';
 import type { ConfessionSave } from './hooks/useWall';
-import { DEMO_CONFESSION, DEMO_WALL } from './utils/demo';
+import { getDemoConfession, getDemoWall } from './utils/demo';
 import { parseAbsolution } from './utils/prompts';
 import { newConfessionId, newTicketNumber, fakeCallDuration } from './utils/ticket';
 import {
@@ -37,7 +37,7 @@ export default function ConfessionBooth() {
   const demo = demoFromUrl();
   const [phase, setPhase] = useState<Phase>(demo ?? 'booth');
   const [confession, setConfession] = useState<Confession | null>(
-    demo === 'absolution' ? DEMO_CONFESSION : null,
+    demo === 'absolution' ? getDemoConfession() : null,
   );
   const [touched, setTouched] = useState(false);
 
@@ -55,7 +55,7 @@ export default function ConfessionBooth() {
   // The wall blends the latest cloud entries with the player's own latest
   // confession at the top (until the cloud catches up).
   const wallEntries = (() => {
-    if (demo === 'wall') return DEMO_WALL;
+    if (demo === 'wall') return getDemoWall();
     const seen = new Set<string>();
     const merged: Confession[] = [];
     if (localHistory[0]) {
@@ -67,7 +67,7 @@ export default function ConfessionBooth() {
       merged.push(c);
       if (merged.length >= 6) break;
     }
-    return merged.length > 0 ? merged : DEMO_WALL;
+    return merged.length > 0 ? merged : getDemoWall();
   })();
 
   // Audio plumbing: ring during ringing, on-hold during hold/connected/cross-ref

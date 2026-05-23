@@ -87,7 +87,7 @@ export default function ProcessingScreen({ stage }: Props) {
         </div>
       </div>
 
-      <p className="cb-processing__fineprint">1-800-CONFESS · CALLS RECORDED FOR ABSOLUTION TRAINING</p>
+      <p className="cb-processing__fineprint">1-800-CONFESS · {t('processing_fineprint')}</p>
     </div>
   );
 }

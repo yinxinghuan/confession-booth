@@ -4,8 +4,9 @@
 // Returns a fully-formed Confession.
 
 import { useCallback, useRef, useState } from 'react';
-import { OPERATOR_SYSTEM, parseAbsolution } from '../utils/prompts';
+import { buildOperatorSystem, parseAbsolution } from '../utils/prompts';
 import { newConfessionId, newTicketNumber, fakeCallDuration } from '../utils/ticket';
+import { getLocale, LOCALE_PROMPT_LABEL } from '../i18n';
 import type { Confession, ProcessingStage } from '../types';
 
 const CHAT_URL = 'https://chat.aiwaves.tech/aigram/api/game-chat';
@@ -72,8 +73,9 @@ export function useConfess(): UseConfess {
     })();
 
     try {
+      const languageLabel = LOCALE_PROMPT_LABEL[getLocale()];
       const raw = await chatOnce(
-        OPERATOR_SYSTEM,
+        buildOperatorSystem(languageLabel),
         `Caller's confession (verbatim, do not echo it back): "${sin}"`,
       );
       const parsed = parseAbsolution(raw);
