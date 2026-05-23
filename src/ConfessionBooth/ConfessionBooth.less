@@ -19,6 +19,9 @@
 @cobalt:         #1d33c4;
 @ruby:           #8a1a1a;
 @lavender:      #9879d1;
+@crt:           #4ad08f;   // CRT-screen sickly green — operator monitor leak
+@neon:          #ec2c64;   // hot rose neon — diner-sign reveal
+@neon-yellow:   #ffba3a;   // matching warm-yellow neon
 
 // ---------------------------------------------------------------------------
 //  Shell
@@ -907,3 +910,569 @@
 }
 
 .cb-loading-hidden { display: none; }
+
+// ===========================================================================
+//  V2 — gothic punk-flyer / noir confessional POV
+// ===========================================================================
+
+// ---- chamber layout --------------------------------------------------------
+
+.cb-booth-v2 {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 4px;
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+  &__action-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .cb-chip--secondary { flex: 1 1 auto; }
+  }
+  &__count {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+    padding: 14px 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: @brass-light;
+    border: 1px solid fade(@brass, 35%);
+    border-radius: 3px;
+    background: fade(#000, 30%);
+  }
+  &__count-num {
+    font-size: 18px;
+    font-weight: 700;
+    color: @neon-yellow;
+    letter-spacing: 0.04em;
+  }
+  &__count-tag {
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: fade(@brass-light, 65%);
+  }
+}
+
+.cb-chamber {
+  position: relative;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  margin-top: 4px;
+  min-height: 0;
+
+  &__transom {
+    position: relative;
+    height: 152px;
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    filter: drop-shadow(0 0 30px fade(@amber, 22%));
+  }
+  &__candle {
+    position: absolute;
+    top: 70px;
+    &--l { left: 12px; }
+    &--r { right: 12px; }
+  }
+  // Diagonal light shaft from upper-left corner — ties whole comp together
+  &__shaft {
+    position: absolute;
+    left: -40px;
+    top: -20px;
+    width: 360px;
+    height: 240px;
+    background: linear-gradient(116deg, fade(@candle, 22%) 0%, fade(@amber, 8%) 30%, transparent 60%);
+    pointer-events: none;
+    mix-blend-mode: screen;
+  }
+
+  &__grille-well {
+    position: relative;
+    flex: 1 1 auto;
+    margin-top: 6px;
+    overflow: hidden;
+    border-top: 2px solid @brass-dark;
+    border-bottom: 2px solid @brass-dark;
+    box-shadow:
+      inset 0 0 0 1px fade(@brass-light, 28%),
+      inset 0 -6px 30px fade(#000, 70%);
+    background: linear-gradient(180deg, #0a0703 0%, #1d130a 50%, #0a0703 100%);
+    min-height: 200px;
+  }
+
+  &__leak {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  &__postit {
+    position: absolute;
+    top: 18px;
+    right: 22px;
+    z-index: 4;
+    background: #f3df6e;
+    color: #1a0f08;
+    padding: 8px 10px 10px;
+    font-family: 'Caveat', cursive;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 0.95;
+    text-align: center;
+    transform: rotate(7deg);
+    box-shadow:
+      0 4px 12px fade(#000, 50%),
+      inset 0 -2px 0 fade(#c8a72c, 60%);
+    text-shadow: 0 1px 0 fade(#fff, 30%);
+    letter-spacing: 0.02em;
+    width: 64px;
+
+    // pin nub on top
+    &::after {
+      content: '';
+      position: absolute;
+      top: -3px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, @neon, darken(@neon, 28%) 75%);
+      box-shadow: 0 1px 0 fade(#000, 60%);
+    }
+  }
+
+  &__floor {
+    flex: 0 0 auto;
+    padding: 16px 0 8px;
+    margin-top: 2px;
+  }
+
+  &__neon {
+    position: absolute;
+    right: 8px;
+    bottom: 18px;
+    z-index: 2; // behind grille
+    transform: rotate(-6deg) scale(0.78);
+    transform-origin: bottom right;
+    opacity: 0.78;
+    animation: cb-neon-flicker 4.8s linear infinite;
+    pointer-events: none;
+    filter: blur(0.4px);
+  }
+}
+
+@keyframes cb-neon-flicker {
+  0%, 70%, 100% { opacity: 1; }
+  72%           { opacity: 0.3; }
+  73%           { opacity: 1; }
+  82%           { opacity: 0.5; }
+  84%           { opacity: 1; }
+}
+
+// ---- crash type ------------------------------------------------------------
+
+.cb-crash {
+  position: absolute;
+  z-index: 5;
+  top: 138px;
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 0 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  pointer-events: none;
+  // hero word breaks across the grille seam — clipped slightly by it
+  mix-blend-mode: normal;
+
+  &__word {
+    flex: 1 1 auto;
+    font-family: 'UnifrakturCook', 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 64px;
+    line-height: 0.82;
+    letter-spacing: -0.01em;
+    color: @candle;
+    text-shadow:
+      0 2px 0 #000,
+      0 4px 14px fade(#000, 60%),
+      0 0 24px fade(@amber, 25%);
+    filter: url(#cb-ink-wobble);
+    text-transform: none;
+  }
+
+  &__rule {
+    flex: 0 0 6px;
+    align-self: stretch;
+    background: @neon;
+    box-shadow: 0 0 8px fade(@neon, 60%);
+  }
+
+  &__tag {
+    flex: 0 0 auto;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family: 'Big Shoulders Stencil Display', 'IBM Plex Mono', monospace;
+    font-weight: 900;
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    color: @neon;
+    text-transform: uppercase;
+    text-shadow: 0 0 8px fade(@neon, 50%);
+  }
+}
+
+// ---- desk leak (behind the grille) ----------------------------------------
+
+.cb-leak {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+
+  &__crt {
+    position: absolute;
+    top: 18%;
+    left: 4%;
+    width: 76%;
+    height: 64%;
+    background:
+      radial-gradient(ellipse at 35% 38%, fade(@crt, 60%) 0%, fade(@crt, 18%) 30%, transparent 70%),
+      linear-gradient(180deg, fade(@crt, 10%) 0%, transparent 100%);
+    filter: blur(2.4px);
+    animation: cb-crt-flicker 3.3s ease-in-out infinite;
+    mix-blend-mode: screen;
+  }
+
+  &__neon {
+    position: absolute;
+    top: 6px;
+    right: 10%;
+    transform: rotate(-12deg);
+    color: @neon-yellow;
+    font-family: 'Big Shoulders Stencil Display', monospace;
+    font-weight: 900;
+    font-size: 13px;
+    letter-spacing: 0.22em;
+    opacity: 0.55;
+    filter: drop-shadow(0 0 6px @neon-yellow);
+    span { display: block; }
+  }
+
+  &__lamp {
+    position: absolute;
+    top: -4px;
+    right: 6%;
+    width: 78px;
+    height: 88px;
+    opacity: 0.95;
+  }
+
+  &__cup {
+    position: absolute;
+    bottom: 14px;
+    left: 10%;
+    width: 56px;
+    height: 64px;
+    opacity: 0.9;
+  }
+  &__steam {
+    animation: cb-steam 2.4s ease-in-out infinite;
+  }
+
+  &__postit {
+    position: absolute;
+    bottom: 32px;
+    right: 18%;
+    background: #f3df6e;
+    color: #1a0f08;
+    padding: 6px 8px 7px;
+    font-family: 'Caveat', cursive;
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 0.95;
+    text-align: center;
+    transform: rotate(-5deg);
+    box-shadow: 0 3px 8px fade(#000, 60%);
+    letter-spacing: 0.02em;
+    opacity: 0.86;
+    span { display: block; }
+  }
+
+  &__cord {
+    position: absolute;
+    top: 38%;
+    left: 0;
+    width: 100%;
+    height: 30px;
+    opacity: 0.45;
+  }
+}
+
+@keyframes cb-crt-flicker {
+  0%, 100% { opacity: 1; }
+  47%      { opacity: 0.7; }
+  53%      { opacity: 0.95; }
+  74%      { opacity: 0.82; }
+}
+@keyframes cb-steam {
+  0%, 100% { transform: translateY(0); opacity: 0.5; }
+  50%      { transform: translateY(-3px); opacity: 0.8; }
+}
+
+// ---- neon sign component (drained roadside diner reveal) ------------------
+
+.cb-neon svg {
+  display: block;
+}
+
+// ---- wall v2: bulletin board ----------------------------------------------
+
+.cb-wall-v2 {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 4px;
+
+  &__hero {
+    position: relative;
+    padding: 12px 4px 4px;
+  }
+
+  &__empty {
+    margin: 30px auto;
+    color: fade(@candle, 60%);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 16px;
+    text-align: center;
+  }
+
+  &__board {
+    list-style: none;
+    margin: 0;
+    padding: 8px 4px 28px;
+    flex: 1 1 auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  &__item {
+    position: relative;
+    transition: transform 220ms ease;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+
+    .cb-receipt {
+      // Override receipt's straight torn edges for a more bulletin-board feel
+      background: #f6e8c0;
+      box-shadow:
+        0 14px 28px fade(#000, 65%),
+        0 0 0 1px fade(@brass-dark, 25%);
+    }
+
+    &:active { transform: translateY(1px) rotate(0deg) !important; }
+
+    // Top-pin variants leave room above for the pin decoration
+    &--pushpin {
+      margin-top: 12px;
+    }
+    &--staple {
+      margin-top: 6px;
+    }
+    &--tape {
+      margin-top: 14px;
+    }
+    &--punch {
+      margin-top: 8px;
+    }
+  }
+
+  // Attachment decoration positioned above/onto each card
+  &__attach {
+    position: absolute;
+    z-index: 5;
+    pointer-events: none;
+    line-height: 0;
+    filter: drop-shadow(0 2px 4px fade(#000, 50%));
+
+    &--pushpin {
+      top: -4px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    &--staple {
+      top: -2px;
+      left: 16px;
+    }
+    &--tape {
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-2deg);
+      width: 80px;
+    }
+    &--punch {
+      top: -2px;
+      left: 14px;
+    }
+  }
+
+  // Stains on the cards
+  &__stain {
+    position: absolute;
+    pointer-events: none;
+    z-index: 3;
+    line-height: 0;
+
+    &--coffee {
+      top: -10px;
+      right: -8px;
+      transform: rotate(8deg);
+      opacity: 0.72;
+    }
+    &--ink {
+      bottom: 14px;
+      left: 8px;
+      transform: rotate(-22deg);
+      opacity: 0.7;
+    }
+    &--fold {
+      top: 0;
+      right: 0;
+    }
+    &--margin {
+      top: 8px;
+      right: 12px;
+      transform: rotate(8deg);
+      font-family: 'Caveat', cursive;
+      font-weight: 700;
+      font-size: 22px;
+      color: @neon;
+      text-shadow: 0 1px 0 fade(#fff, 50%);
+      line-height: 1;
+    }
+  }
+
+  &__row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    align-items: center;
+  }
+  &__body { min-width: 0; }
+  &__stamp { flex: 0 0 auto; }
+
+  &__sin {
+    margin: 0 0 4px;
+    font-family: 'Caveat', cursive;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 1.2;
+    color: @ink;
+    transform: rotate(-0.3deg);
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  &__quip {
+    margin: 4px 0 4px;
+    font-family: 'Special Elite', monospace;
+    font-size: 12px;
+    color: fade(@ink, 80%);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  &__anon {
+    margin: 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    color: fade(@ink, 50%);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  &__expand {
+    margin-top: 6px;
+    .cb-abs__reply-line { font-size: 13.5px; }
+  }
+  &__expand-line {
+    animation: cb-abs-line 280ms ease-out forwards;
+  }
+  &__expand-penance {
+    margin-top: 8px;
+    padding: 6px 10px;
+    background: fade(@brass, 14%);
+    border-left: 2px solid @brass-dark;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: @ink;
+  }
+
+  &__dock {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-top: 10px;
+    border-top: 1px solid fade(@brass, 25%);
+
+    .cb-chip--primary { flex: 1 1 auto; }
+  }
+}
+
+// Wall hero uses the crash type with two stacked lines + horizontal rule
+.cb-crash--wall {
+  position: static;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 6px 0 0;
+  gap: 0;
+
+  .cb-crash__word {
+    font-size: 76px;
+    line-height: 0.84;
+
+    &--script {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 600;
+      font-size: 46px;
+      color: @neon;
+      letter-spacing: -0.005em;
+      text-shadow: 0 0 10px fade(@neon, 45%), 0 2px 0 #000;
+      margin-top: -8px;
+      margin-left: 24px;
+    }
+  }
+}
+.cb-crash__rule--h {
+  position: absolute;
+  top: 22px;
+  left: -20px;
+  right: -20px;
+  height: 6px;
+  background: @neon;
+  box-shadow: 0 0 8px fade(@neon, 50%);
+}
+
