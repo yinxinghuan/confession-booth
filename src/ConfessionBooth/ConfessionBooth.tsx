@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import './ConfessionBooth.less';
+import './v4/v4.less';
 import WoodPanel from './components/WoodPanel';
 import SvgFilters from './components/SvgFilters';
-import BoothScreen from './components/BoothScreen';
+import BoothScreen from './v4/BoothScreenV4';
 import TypingScreen from './components/TypingScreen';
 import ProcessingScreen from './components/ProcessingScreen';
 import AbsolutionScreen from './components/AbsolutionScreen';
