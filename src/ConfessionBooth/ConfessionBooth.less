@@ -90,91 +90,210 @@
 }
 
 // ---------------------------------------------------------------------------
-//  Buttons (Chip)
+//  Call-center keypad buttons (.cb-key)
 // ---------------------------------------------------------------------------
 
-.cb-chip {
+.cb-key {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 14px 22px;
+  padding: 18px 24px;
   border: 0;
   cursor: pointer;
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-weight: 700;
+  font-family: 'Big Shoulders Stencil Display', 'IBM Plex Mono', monospace;
+  font-weight: 900;
   font-size: 17px;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   text-align: center;
+  border-radius: 4px;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
   touch-action: manipulation;
-  transition: transform 90ms ease-out, box-shadow 120ms ease;
+  transition: transform 60ms ease-out, box-shadow 120ms ease;
+  overflow: hidden;
 
   &__label {
     position: relative;
-    z-index: 2;
+    z-index: 4;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
   }
-
-  &__stud {
+  &__bevel {
     position: absolute;
-    width: 5px;
-    height: 5px;
+    left: 0; right: 0;
+    height: 2px;
+    z-index: 3;
+    pointer-events: none;
+    &--top { top: 0; }
+    &--bot { bottom: 0; }
+  }
+  &__screw {
+    position: absolute;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, @brass-light, @brass-dark 75%);
-    box-shadow: 0 0 0 0.5px fade(#000, 50%);
+    z-index: 3;
+    background: radial-gradient(circle at 30% 30%, #c8a060, #2e1b08 80%);
+    box-shadow: inset 0 0 0 0.5px #1a0f08;
 
-    &--tl { top: 4px; left: 6px; }
-    &--tr { top: 4px; right: 6px; }
-    &--bl { bottom: 4px; left: 6px; }
-    &--br { bottom: 4px; right: 6px; }
+    // primary's two screws sit at vertical center, hugging side edges
+    &--l { top: 50%; left: 6px; transform: translateY(-50%); }
+    &--r { top: 50%; right: 6px; transform: translateY(-50%); }
+    // secondary's four screws are corners
+    &--tl { top: 6px; left: 6px; }
+    &--tr { top: 6px; right: 6px; }
+    &--bl { bottom: 6px; left: 6px; }
+    &--br { bottom: 6px; right: 6px; }
+
+    // tiny phillips slot
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) rotate(45deg);
+      width: 4px;
+      height: 0.6px;
+      background: #1a0f08;
+      box-shadow: 0 0 0 0.3px fade(#000, 80%);
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) rotate(-45deg);
+      width: 4px;
+      height: 0.6px;
+      background: #1a0f08;
+    }
+  }
+  &__led {
+    position: absolute;
+    top: 7px;
+    right: 10px;
+    z-index: 3;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #b8f5cd, #2bbf6b 60%, #105433 100%);
+    box-shadow:
+      0 0 6px fade(@crt, 95%),
+      0 0 12px fade(@crt, 60%),
+      inset 0 -1px 1px fade(#000, 60%);
+    animation: cb-led-pulse 2s ease-in-out infinite;
+  }
+  &__plate-rule {
+    position: absolute;
+    left: 22px; right: 22px;
+    height: 1px;
+    background: fade(#000, 35%);
+    box-shadow: 0 1px 0 fade(#fce6a3, 35%);
+    pointer-events: none;
+    z-index: 3;
+    &--top { top: 4px; }
+    &--bot { bottom: 4px; }
   }
 
   &--full { width: 100%; }
 
   &:active:not(:disabled) {
-    transform: translateY(1px);
+    transform: translateY(2px);
   }
 
   &:disabled {
     opacity: 0.45;
     cursor: default;
+    .cb-key__led { animation: none; opacity: 0.4; }
   }
 
-  // ---- primary: warm cream tablet -----------------------------------------
+  // ---- primary: illuminated cream-plastic phone key ----------------------
   &--primary {
-    color: @ink;
-    background: linear-gradient(180deg, @cream 0%, @candle 55%, darken(@cream, 8%) 100%);
+    color: #2a1c12;
+    background:
+      // upper highlight
+      radial-gradient(ellipse at 50% 0%, fade(#fff, 70%) 0%, transparent 60%),
+      linear-gradient(180deg, #fff5d2 0%, @candle 38%, #d6c089 100%);
     box-shadow:
-      0 2px 0 darken(@candle, 30%),
-      0 6px 0 -2px @brass-dark,
-      inset 0 0 0 1px fade(@brass-dark, 45%),
-      inset 0 -2px 4px fade(@brass-dark, 20%);
-    .cb-chip__stud {
-      background: radial-gradient(circle at 30% 30%, @brass-light, @brass-dark 75%);
+      // thick dark base — the depression travel
+      0 5px 0 #4a3210,
+      // matt drop shadow under the base
+      0 8px 14px fade(#000, 55%),
+      // recessed bezel rim
+      inset 0 0 0 1.5px #4a3210,
+      // inner top highlight (glossy plastic)
+      inset 0 2px 0 fade(#fff, 90%),
+      // inner bottom shadow (depressed lip)
+      inset 0 -3px 4px fade(#4a3210, 35%);
+    text-shadow: 0 1px 0 fade(#fff, 60%);
+
+    .cb-key__bevel--top {
+      background: linear-gradient(180deg, fade(#fff, 85%) 0%, transparent 100%);
+    }
+    .cb-key__bevel--bot {
+      background: linear-gradient(0deg, fade(#4a3210, 45%) 0%, transparent 100%);
+    }
+
+    &:active:not(:disabled) {
+      box-shadow:
+        0 1px 0 #4a3210,
+        0 4px 8px fade(#000, 55%),
+        inset 0 0 0 1.5px #4a3210,
+        inset 0 -1px 0 fade(#fff, 50%),
+        inset 0 3px 4px fade(#4a3210, 55%);
     }
   }
 
-  // ---- secondary: dark walnut with brass plate ----------------------------
+  // ---- secondary: engraved brass nameplate -------------------------------
   &--secondary {
-    color: @candle;
-    background: linear-gradient(180deg, @wood-mid 0%, @wood 60%, @wood-deep 100%);
+    color: #fce6a3;
+    padding: 16px 22px;
+    background:
+      linear-gradient(180deg, #d8a849 0%, #a87e3a 45%, #5a3e15 100%);
     box-shadow:
-      0 2px 0 darken(@wood-deep, 4%),
-      0 6px 0 -2px #000,
-      inset 0 0 0 1px fade(@brass, 35%);
+      // thin lifted shadow (mounted plate, not pressable-feeling)
+      0 3px 0 #2e1b08,
+      0 5px 10px fade(#000, 60%),
+      inset 0 0 0 1px #2e1b08,
+      inset 0 1px 0 fade(#fce6a3, 60%),
+      inset 0 -1px 0 fade(#2e1b08, 80%);
+    text-shadow:
+      // engraved type: dark inset shadow + bright bottom highlight
+      0 -1px 0 fade(#2e1b08, 75%),
+      0 1px 0 fade(#fce6a3, 35%);
+
+    .cb-key__bevel--top {
+      background: linear-gradient(180deg, fade(#fce6a3, 95%) 0%, transparent 100%);
+    }
+    .cb-key__bevel--bot {
+      background: linear-gradient(0deg, fade(#2e1b08, 80%) 0%, transparent 100%);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(1px);
+      box-shadow:
+        0 2px 0 #2e1b08,
+        0 3px 6px fade(#000, 60%),
+        inset 0 0 0 1px #2e1b08,
+        inset 0 1px 0 fade(#fce6a3, 60%);
+    }
   }
 
-  // ---- ghost: text only with brass underline ------------------------------
+  // ---- ghost: text-only link, brass underline ---------------------------
   &--ghost {
     color: @brass-light;
     background: transparent;
     padding: 12px 14px;
-    font-size: 13px;
-    letter-spacing: 0.22em;
-    font-weight: 600;
-    .cb-chip__stud { display: none; }
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.24em;
+    font-weight: 700;
+    box-shadow: none;
+    border-radius: 0;
+    overflow: visible;
+
+    .cb-key__bevel, .cb-key__screw, .cb-key__led { display: none; }
     &::after {
       content: '';
       position: absolute;
@@ -182,8 +301,26 @@
       height: 1px;
       background: fade(@brass, 60%);
     }
+    &:active { transform: translateY(0); }
   }
 }
+
+@keyframes cb-led-pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 6px fade(@crt, 95%),
+      0 0 12px fade(@crt, 60%),
+      inset 0 -1px 1px fade(#000, 60%);
+  }
+  50% {
+    box-shadow:
+      0 0 10px fade(@crt, 100%),
+      0 0 20px fade(@crt, 80%),
+      inset 0 -1px 1px fade(#000, 60%);
+  }
+}
+
+// (legacy .cb-chip alias removed — all consumers use .cb-key now)
 
 // ---------------------------------------------------------------------------
 //  Booth Screen (entry)
@@ -456,7 +593,7 @@
     gap: 8px;
     margin-top: 6px;
 
-    .cb-chip--primary { flex: 1 1 auto; }
+    .cb-key--primary { flex: 1 1 auto; }
   }
 }
 
@@ -733,7 +870,7 @@
     margin-top: auto;
     padding-top: 12px;
 
-    .cb-chip--primary { flex: 1 1 auto; }
+    .cb-key--primary { flex: 1 1 auto; }
   }
 }
 
@@ -886,7 +1023,7 @@
     padding-top: 10px;
     border-top: 1px solid fade(@brass, 20%);
 
-    .cb-chip--primary { flex: 1 1 auto; }
+    .cb-key--primary { flex: 1 1 auto; }
   }
 }
 
@@ -934,7 +1071,7 @@
     align-items: center;
     gap: 10px;
 
-    .cb-chip--secondary { flex: 1 1 auto; }
+    .cb-key--secondary { flex: 1 1 auto; }
   }
   &__count {
     display: inline-flex;
@@ -971,28 +1108,35 @@
 
   &__transom {
     position: relative;
-    height: 152px;
+    height: 102px;
     flex: 0 0 auto;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    filter: drop-shadow(0 0 30px fade(@amber, 22%));
+    flex-direction: column;
+    align-items: stretch;
+    overflow: visible;
   }
-  &__candle {
+  &__transom-glass {
     position: absolute;
-    top: 70px;
-    &--l { left: 12px; }
-    &--r { right: 12px; }
+    top: 6px;
+    left: 22px;
+    filter: drop-shadow(0 0 18px fade(@amber, 22%));
+    opacity: 0.85;
   }
-  // Diagonal light shaft from upper-left corner — ties whole comp together
+  &__transom-fluo {
+    position: absolute;
+    top: 38px;
+    right: 6px;
+    transform: rotate(-2deg);
+    animation: cb-fluo-flicker 4.6s linear infinite;
+  }
+  // Diagonal light shaft — kept but biased to right corner now
   &__shaft {
     position: absolute;
-    left: -40px;
+    right: -40px;
     top: -20px;
     width: 360px;
     height: 240px;
-    background: linear-gradient(116deg, fade(@candle, 22%) 0%, fade(@amber, 8%) 30%, transparent 60%);
+    background: linear-gradient(-116deg, fade(@candle, 18%) 0%, fade(@amber, 6%) 30%, transparent 60%);
     pointer-events: none;
     mix-blend-mode: screen;
   }
@@ -1146,81 +1290,151 @@
 
   &__crt {
     position: absolute;
-    top: 18%;
-    left: 4%;
-    width: 76%;
-    height: 64%;
+    top: 22%;
+    left: 6%;
+    width: 70%;
+    height: 56%;
     background:
-      radial-gradient(ellipse at 35% 38%, fade(@crt, 60%) 0%, fade(@crt, 18%) 30%, transparent 70%),
-      linear-gradient(180deg, fade(@crt, 10%) 0%, transparent 100%);
-    filter: blur(2.4px);
+      radial-gradient(ellipse at 35% 38%, fade(@crt, 78%) 0%, fade(@crt, 30%) 35%, transparent 75%),
+      linear-gradient(180deg, fade(@crt, 16%) 0%, transparent 100%);
+    filter: blur(1.6px);
     animation: cb-crt-flicker 3.3s ease-in-out infinite;
     mix-blend-mode: screen;
+  }
+  &__crt-scan {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 3px,
+      fade(#000, 12%) 3px,
+      fade(#000, 12%) 4px
+    );
+    opacity: 0.6;
+    animation: cb-crt-roll 8s linear infinite;
   }
 
   &__neon {
     position: absolute;
-    top: 6px;
-    right: 10%;
-    transform: rotate(-12deg);
+    top: 8px;
+    right: 8%;
+    transform: rotate(-10deg);
     color: @neon-yellow;
     font-family: 'Big Shoulders Stencil Display', monospace;
     font-weight: 900;
-    font-size: 13px;
+    font-size: 14px;
     letter-spacing: 0.22em;
-    opacity: 0.55;
-    filter: drop-shadow(0 0 6px @neon-yellow);
+    opacity: 0.78;
+    filter: drop-shadow(0 0 4px @neon-yellow) drop-shadow(0 0 10px fade(@neon, 60%));
+    line-height: 1.05;
     span { display: block; }
   }
 
   &__lamp {
     position: absolute;
     top: -4px;
-    right: 6%;
-    width: 78px;
-    height: 88px;
-    opacity: 0.95;
+    right: 4%;
+    width: 92px;
+    height: 110px;
+    opacity: 1;
   }
 
   &__cup {
     position: absolute;
-    bottom: 14px;
-    left: 10%;
-    width: 56px;
-    height: 64px;
-    opacity: 0.9;
+    bottom: 8px;
+    left: 6%;
+    width: 60px;
+    height: 72px;
+    opacity: 0.94;
   }
   &__steam {
     animation: cb-steam 2.4s ease-in-out infinite;
   }
 
+  &__cassette {
+    position: absolute;
+    bottom: 24%;
+    right: 8%;
+    width: 78px;
+    height: 50px;
+    transform: rotate(8deg);
+    opacity: 0.92;
+    filter: drop-shadow(0 4px 4px fade(#000, 60%));
+  }
+
+  &__clock {
+    position: absolute;
+    top: 26%;
+    left: 2%;
+    width: 56px;
+    height: 70px;
+    transform: rotate(-4deg);
+    opacity: 0.88;
+    filter: drop-shadow(0 4px 4px fade(#000, 60%));
+  }
+
+  &__binder {
+    position: absolute;
+    bottom: 8%;
+    right: 28%;
+    width: 70px;
+    height: 48px;
+    transform: rotate(-3deg);
+    opacity: 0.84;
+    filter: drop-shadow(0 4px 4px fade(#000, 60%));
+  }
+
   &__postit {
     position: absolute;
-    bottom: 32px;
-    right: 18%;
+    bottom: 36%;
+    right: 22%;
     background: #f3df6e;
     color: #1a0f08;
     padding: 6px 8px 7px;
     font-family: 'Caveat', cursive;
     font-weight: 700;
-    font-size: 13px;
+    font-size: 14px;
     line-height: 0.95;
     text-align: center;
     transform: rotate(-5deg);
     box-shadow: 0 3px 8px fade(#000, 60%);
     letter-spacing: 0.02em;
-    opacity: 0.86;
+    opacity: 0.92;
     span { display: block; }
   }
 
   &__cord {
     position: absolute;
-    top: 38%;
+    top: 46%;
     left: 0;
     width: 100%;
-    height: 30px;
-    opacity: 0.45;
+    height: 32px;
+    opacity: 0.6;
   }
+}
+
+@keyframes cb-crt-roll {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(4px); }
+}
+@keyframes cb-fluo-flicker {
+  0%, 92%, 100% { opacity: 1; filter: none; }
+  93%           { opacity: 0.3; }
+  94%           { opacity: 1; }
+  96%           { opacity: 0.5; }
+  97%           { opacity: 1; }
+}
+.cb-fluo {
+  display: block;
+  animation: cb-fluo-flicker 4.6s linear infinite;
+}
+.cb-fluo__body {
+  animation: cb-fluo-hum 1.8s ease-in-out infinite;
+}
+@keyframes cb-fluo-hum {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.92; }
 }
 
 @keyframes cb-crt-flicker {
@@ -1437,7 +1651,7 @@
     padding-top: 10px;
     border-top: 1px solid fade(@brass, 25%);
 
-    .cb-chip--primary { flex: 1 1 auto; }
+    .cb-key--primary { flex: 1 1 auto; }
   }
 }
 

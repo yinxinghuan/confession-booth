@@ -1,8 +1,8 @@
 import StainedGlass from './StainedGlass';
-import CandleFlame from './CandleFlame';
 import BrassGrille from './BrassGrille';
 import DeskLeak from './DeskLeak';
 import NeonSign from './NeonSign';
+import Fluorescent from './Fluorescent';
 import Chip from './Chip';
 import MetaStrip from './MetaStrip';
 import { t, getLocale } from '../i18n';
@@ -33,39 +33,33 @@ export default function BoothScreen({ weekCount, onEnter, onWall }: Props) {
     <div className="cb-booth-v2">
       <MetaStrip>{t('meta_line')}</MetaStrip>
 
-      {/* The chamber: pointed-arch silhouette spanning most of the viewport.
-          Stained-glass transom up top, MASSIVE grille middle, dark interior
-          at the bottom. Crash type sits on top of the grille and breaks
-          across the lattice. */}
       <div className="cb-chamber">
-        {/* Stained-glass transom */}
+        {/* Top strip: small stained-glass transom + fluorescent tube hum
+            (replaced the second candle to dial down the church feel) */}
         <div className="cb-chamber__transom">
-          <StainedGlass width={320} height={160} variant="top-strip" />
-          <span className="cb-chamber__candle cb-chamber__candle--l">
-            <CandleFlame width={20} height={48} noStick />
-          </span>
-          <span className="cb-chamber__candle cb-chamber__candle--r">
-            <CandleFlame width={20} height={48} noStick />
-          </span>
+          <div className="cb-chamber__transom-glass">
+            <StainedGlass width={156} height={92} variant="top-strip" />
+          </div>
+          <div className="cb-chamber__transom-fluo">
+            <Fluorescent width={160} height={14} />
+          </div>
           {/* Diagonal light shaft */}
           <span className="cb-chamber__shaft" aria-hidden />
         </div>
 
-        {/* Crash blackletter hero — broken across the screen above the grille */}
+        {/* Crash blackletter hero */}
         <h1 className="cb-crash">
           <span className="cb-crash__word">{crash.word}</span>
           <span className="cb-crash__rule" aria-hidden />
           <span className="cb-crash__tag">{crash.tag}</span>
         </h1>
 
-        {/* Massive brass grille with desk leak behind */}
+        {/* The grille well — operator's desk leaks through */}
         <div className="cb-chamber__grille-well">
           <DeskLeak className="cb-chamber__leak" noteSeed={2} />
-          {/* Neon sign sits behind the grille as part of the operator's desk
-              reveal (not competing with chip buttons) */}
           <NeonSign className="cb-chamber__neon" />
           <BrassGrille width="100%" height="100%" density={0.96} cell={26} />
-          {/* Player-side Post-It pinned ON the grille (foreground) */}
+          {/* Player-side Post-It pinned ON the grille */}
           <span className="cb-chamber__postit cb-chamber__postit--front" aria-hidden>
             BACK
             <br />
@@ -73,7 +67,7 @@ export default function BoothScreen({ weekCount, onEnter, onWall }: Props) {
           </span>
         </div>
 
-        {/* Dark wood interior strip — buttons sit here */}
+        {/* Dock — call-center keypad buttons */}
         <div className="cb-chamber__floor">
           <div className="cb-booth-v2__actions">
             <Chip variant="primary" onClick={onEnter} fullWidth>
