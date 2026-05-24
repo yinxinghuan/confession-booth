@@ -1048,6 +1048,40 @@
 
 .cb-loading-hidden { display: none; }
 
+// ---------------------------------------------------------------------------
+//  Scrollbars — thin brass-tinted rail on every scrollable container, fades
+//  to invisible when idle. Matches the call-center aesthetic instead of the
+//  default browser bar.
+// ---------------------------------------------------------------------------
+
+.cb-stage,
+.cb-wall-v2__board,
+.cb-wall__list {
+  // Firefox
+  scrollbar-width: thin;
+  scrollbar-color: fade(@brass, 35%) transparent;
+
+  // Webkit / Blink
+  &::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: fade(@brass, 30%);
+    border-radius: 2px;
+    transition: background 200ms ease;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: fade(@brass-light, 55%);
+  }
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+}
+
 // ===========================================================================
 //  V2 — gothic punk-flyer / noir confessional POV
 // ===========================================================================
