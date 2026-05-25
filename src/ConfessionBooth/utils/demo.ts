@@ -238,6 +238,17 @@ const DEMOS: Record<LocaleKey, LocaleDemo> = {
 const VERDICTS: Verdict[] = ['ABSOLVED', 'ABSOLVED', 'DEFERRED', 'ABSOLVED', 'ABSOLVED', 'DENIED'];
 const TICKETS = ['#4823-2', '#4824-9', '#4825-3', '#4826-5', '#4827-1', '#4828-0'];
 
+// Demo "festival guests" so the v4 wall preview shows actual avatar
+// chips + names instead of a row of identical "Festival Guest" labels.
+const DEMO_AUTHORS: Array<{ userId: string; userName: string }> = [
+  { userId: 'demo-mavis',  userName: 'Mavis' },
+  { userId: 'demo-jlee',   userName: 'JL' },
+  { userId: 'demo-karen',  userName: 'Karen' },
+  { userId: 'demo-felix',  userName: 'Felix' },
+  { userId: 'demo-asha',   userName: 'Asha' },
+  { userId: 'demo-theo',   userName: 'Theo' },
+];
+
 function localeOrEn(): LocaleKey {
   const l = getLocale();
   return (DEMOS as any)[l] ? (l as LocaleKey) : 'en';
@@ -272,6 +283,11 @@ export function getDemoWall(): Confession[] {
     ticketNumber: TICKETS[i] || `#0000-${i}`,
     callDuration: '01:14',
     createdAt: Date.now() - i * 60_000,
+    // v4 festival edition: each demo entry has a unique author so the
+    // wall preview shows actual avatar variety.
+    userId: DEMO_AUTHORS[i % DEMO_AUTHORS.length].userId,
+    userName: DEMO_AUTHORS[i % DEMO_AUTHORS.length].userName,
+    weekIndex: i % 12,
   }));
 }
 
