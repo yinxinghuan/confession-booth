@@ -1,6 +1,10 @@
 // The Wall of (Mostly) Forgiven. Pulls 6 most-recent users' latest save
-// rows and yields their newest confession — anonymized, no userId, no
-// avatar (per design: complete anonymity).
+// rows and yields ALL confessions across them — anonymized, no userId,
+// no avatar (per design: complete anonymity).
+//
+// We throttle at publish (already daily-quota'd), never at display —
+// see feedback_throttle_at_input_not_output. Older confessions must
+// stay browsable; the older one is often the more interesting one.
 
 import { useCallback, useEffect, useState } from 'react';
 import {
@@ -48,20 +52,26 @@ export function useWall(): UseWall {
           'GET',
         );
         const rows = Array.isArray(res?.data) ? res.data : [];
+        // Flatten ALL confessions from each user's save row. Older
+        // pattern took confessions[0] only, hiding every author's
+        // older sins behind their newest. Throttle at publish.
         const parsed: Confession[] = [];
         for (const row of rows) {
           if (!row.resource_data) continue;
           try {
             const save = JSON.parse(row.resource_data) as ConfessionSave;
-            const c = save.confessions?.[0];
-            if (c && c.sin && c.operatorReply) parsed.push(c);
+            for (const c of save.confessions || []) {
+              if (c && c.sin && c.operatorReply) parsed.push(c);
+            }
           } catch {
             /* skip corrupt row */
           }
-          if (parsed.length >= 6) break;
         }
+        // Newest first across all authors, cap visible count.
+        parsed.sort((a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0));
+        const limited = parsed.slice(0, 24);
         if (cancelled) return;
-        setEntries(parsed);
+        setEntries(limited);
       } catch {
         if (!cancelled) setEntries([]);
       } finally {
