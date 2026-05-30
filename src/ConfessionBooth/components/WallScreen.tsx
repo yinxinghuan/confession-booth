@@ -76,7 +76,9 @@ export default function WallScreen({ entries, loaded, onBack, onConfess }: Props
                 key={c.id}
                 className={`cb-wall-v2__item cb-wall-v2__item--${d.pin} ${open ? 'cb-wall-v2__item--open' : ''}`}
                 style={{ transform: `rotate(${d.tilt}deg)` }}
-                onPointerDown={(e) => {
+                // onClick (not onPointerDown) — board scrolls; pointerdown
+                // would open the card mid-scroll. See scroll-vs-click skill.
+                onClick={(e) => {
                   e.preventDefault();
                   setOpenId(open ? null : c.id);
                 }}
