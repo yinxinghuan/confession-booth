@@ -104,7 +104,9 @@ export default function WallScreenV4({ entries, loaded, onBack, onConfess }: Pro
               <li
                 key={c.id}
                 className="cb4-wall__card"
-                onPointerDown={(e) => {
+                // onClick (not onPointerDown) — wall scrolls; pointerdown
+                // would open the card mid-scroll. See scroll-vs-click skill.
+                onClick={(e) => {
                   e.preventDefault();
                   playPop();
                   setOpenId(c.id);
