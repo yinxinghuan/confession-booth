@@ -9,7 +9,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import {
   callAigramAPI,
-  isInAigram,
+  isInAigramNow,
   type AigramResponse,
 } from '@shared/runtime/bridge';
 import { getGameUuid } from '@shared/runtime/game-id';
@@ -40,7 +40,7 @@ export function useWall(): UseWall {
 
   useEffect(() => {
     const sessionId = getGameUuid();
-    if (!isInAigram || !sessionId) {
+    if (!isInAigramNow() || !sessionId) {
       setLoaded(true);
       return;
     }

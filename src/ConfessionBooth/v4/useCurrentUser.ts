@@ -3,7 +3,7 @@
 // when not inside Aigram (dev/preview).
 
 import { useEffect, useState } from 'react';
-import { callAigramAPI, isInAigram, telegramId, type AigramResponse } from '@shared/runtime/bridge';
+import { callAigramAPI, isInAigramNow, getTelegramId, type AigramResponse } from '@shared/runtime/bridge';
 
 export interface UserProfile {
   userId: string;
@@ -21,7 +21,7 @@ export function useCurrentUser(): { profile: UserProfile | null; loaded: boolean
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    if (!isInAigram || !telegramId) {
+    if (!isInAigramNow() || !getTelegramId()!) {
       setProfile(FALLBACK);
       setLoaded(true);
       return;
@@ -30,17 +30,17 @@ export function useCurrentUser(): { profile: UserProfile | null; loaded: boolean
     (async () => {
       try {
         const res = await callAigramAPI<AigramResponse<{ name?: string; head_url?: string }>>(
-          `/note/telegram/user/get/info/by/telegram_id?telegram_id=${encodeURIComponent(telegramId)}`,
+          `/note/telegram/user/get/info/by/telegram_id?telegram_id=${encodeURIComponent(getTelegramId()!)}`,
           'GET',
         );
         if (cancelled) return;
         setProfile({
-          userId: telegramId,
+          userId: getTelegramId()!,
           name: res?.data?.name || 'Anonymous',
           avatarUrl: res?.data?.head_url,
         });
       } catch {
-        if (!cancelled) setProfile({ userId: telegramId, name: 'Anonymous' });
+        if (!cancelled) setProfile({ userId: getTelegramId()!, name: 'Anonymous' });
       } finally {
         if (!cancelled) setLoaded(true);
       }
@@ -55,7 +55,7 @@ export function useCurrentUser(): { profile: UserProfile | null; loaded: boolean
 
 /** Fetch a peer user's profile (for wall cards). */
 export async function fetchPeerProfile(userId: string): Promise<UserProfile | null> {
-  if (!isInAigram || !userId || userId === 'guest') return null;
+  if (!isInAigramNow() || !userId || userId === 'guest') return null;
   try {
     const res = await callAigramAPI<AigramResponse<{ name?: string; head_url?: string }>>(
       `/note/telegram/user/get/info/by/telegram_id?telegram_id=${encodeURIComponent(userId)}`,
