@@ -3,7 +3,7 @@ type Locale = 'en' | 'zh' | 'es' | 'pt' | 'ru' | 'ja' | 'ko' | 'fr';
 const SUPPORTED: Locale[] = ['en', 'zh', 'es', 'pt', 'ru', 'ja', 'ko', 'fr'];
 
 function detectLocale(): Locale {
-  const override = (typeof localStorage !== 'undefined' && localStorage.getItem('game_locale')) || '';
+  const override = (typeof localStorage !== 'undefined' && alteruLocalStorage.getItem('game_locale')) || '';
   if ((SUPPORTED as string[]).includes(override)) return override as Locale;
   const nav = (navigator.language || 'en').toLowerCase();
   // Match by primary subtag
@@ -377,5 +377,5 @@ export function getLocale(): Locale {
 
 export function setLocale(loc: Locale): void {
   LOCALE = loc;
-  if (typeof localStorage !== 'undefined') localStorage.setItem('game_locale', loc);
+  if (typeof localStorage !== 'undefined') alteruLocalStorage.setItem('game_locale', loc);
 }
